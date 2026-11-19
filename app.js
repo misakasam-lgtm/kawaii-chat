@@ -506,10 +506,10 @@ class StockSimulatorApp {
         this.sound.init();
         this.sound.playGainChime();
         this.audioIcon.textContent = '🔔';
-        this.audioText.textContent = '萌音开';
+        this.audioText.textContent = '音效开';
       } else {
         this.audioIcon.textContent = '🔕';
-        this.audioText.textContent = '萌音关';
+        this.audioText.textContent = '音效关';
       }
     });
 
@@ -1196,7 +1196,7 @@ class StockSimulatorApp {
     this.updatePlayUiState();
 
     this.statusPulseDot.classList.add('playing');
-    this.playStatusText.textContent = '萌萌走势动画正在灵动播放中... ✨';
+    this.playStatusText.textContent = '走势动画正在播放中...';
 
     // 开始逐步步进
     this.scheduleNextStep();
@@ -1360,7 +1360,7 @@ class StockSimulatorApp {
       this.playStatusText.textContent = '动画已暂停，点击「继续」或「下一步」';
       this.statusPulseDot.classList.remove('playing');
     } else {
-      this.playStatusText.textContent = '萌萌走势动画正在灵动播放中... ✨';
+      this.playStatusText.textContent = '走势动画正在播放中...';
       this.statusPulseDot.classList.add('playing');
       this.scheduleNextStep();
     }
@@ -1371,7 +1371,7 @@ class StockSimulatorApp {
     this.isPlaying = true;
     this.updatePlayUiState();
     this.statusPulseDot.classList.add('playing');
-    this.playStatusText.textContent = '萌萌走势动画正在灵动播放中... ✨';
+    this.playStatusText.textContent = '走势动画正在播放中...';
     this.scheduleNextStep();
   }
 

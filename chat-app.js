@@ -1,16 +1,15 @@
 /**
- * 萌系聊天动画模拟器 - Kawaii Chat Simulator (chat-app.js)
- * 特色：角色与头像永久自动绑定、灵动弹跳气泡动画、表情包连发、向下平滑自动滚动、2s倒计时录屏
- * 严格无人物角色，纯萌物动物与可爱表情
+ * 聊天对话动画模拟器 (chat-app.js)
+ * 功能：角色与头像自动绑定、消息按序平滑播放、支持文字与自定义图片/表情、向下自动滚动、倒计时录屏
  */
 
 // ==========================================
-// 1. 萌宠头像 SVG 预设库 (严格无人物)
+// 1. 预设头像 SVG 图标库
 // ==========================================
 const PRESET_AVATARS = [
   {
     id: 'cat',
-    name: '软萌猫咪',
+    name: '猫咪',
     svg: `<svg viewBox="0 0 64 64" class="preset-avatar-svg">
       <circle cx="32" cy="32" r="30" fill="#ffe4ec"/>
       <path d="M14 26 L22 10 L30 24 Z" fill="#ff8da1"/>
@@ -30,7 +29,7 @@ const PRESET_AVATARS = [
   },
   {
     id: 'shiba',
-    name: '欢喜小柴',
+    name: '柴犬',
     svg: `<svg viewBox="0 0 64 64" class="preset-avatar-svg">
       <circle cx="32" cy="32" r="30" fill="#fef3c7"/>
       <polygon points="12,24 22,8 28,24" fill="#d97706"/>
@@ -49,7 +48,7 @@ const PRESET_AVATARS = [
   },
   {
     id: 'bunny',
-    name: '甜甜兔兔',
+    name: '兔子',
     svg: `<svg viewBox="0 0 64 64" class="preset-avatar-svg">
       <circle cx="32" cy="32" r="30" fill="#fdf2f8"/>
       <ellipse cx="23" cy="16" rx="6" ry="14" fill="#ffffff" stroke="#fbcfe8" stroke-width="1.5"/>
@@ -69,7 +68,7 @@ const PRESET_AVATARS = [
   },
   {
     id: 'panda',
-    name: '憨憨熊猫',
+    name: '熊猫',
     svg: `<svg viewBox="0 0 64 64" class="preset-avatar-svg">
       <circle cx="32" cy="32" r="30" fill="#e0f2fe"/>
       <circle cx="16" cy="18" r="8" fill="#1f2937"/>
@@ -87,7 +86,7 @@ const PRESET_AVATARS = [
   },
   {
     id: 'hamster',
-    name: '圆滚仓鼠',
+    name: '仓鼠',
     svg: `<svg viewBox="0 0 64 64" class="preset-avatar-svg">
       <circle cx="32" cy="32" r="30" fill="#fae8ff"/>
       <circle cx="16" cy="20" r="7" fill="#fcd34d"/>
@@ -107,7 +106,7 @@ const PRESET_AVATARS = [
   },
   {
     id: 'chick',
-    name: '萌萌小鸡',
+    name: '小鸡',
     svg: `<svg viewBox="0 0 64 64" class="preset-avatar-svg">
       <circle cx="32" cy="32" r="30" fill="#fef9c3"/>
       <path d="M32 10 Q35 6 36 12" stroke="#f59e0b" stroke-width="2.5" fill="none"/>
@@ -121,7 +120,7 @@ const PRESET_AVATARS = [
   },
   {
     id: 'piggy',
-    name: '招财小猪',
+    name: '小猪',
     svg: `<svg viewBox="0 0 64 64" class="preset-avatar-svg">
       <circle cx="32" cy="32" r="30" fill="#ffe4e6"/>
       <polygon points="14,24 20,10 26,22" fill="#fb7185"/>
@@ -136,7 +135,7 @@ const PRESET_AVATARS = [
   },
   {
     id: 'bear',
-    name: '治愈小熊',
+    name: '小熊',
     svg: `<svg viewBox="0 0 64 64" class="preset-avatar-svg">
       <circle cx="32" cy="32" r="30" fill="#f5ebe0"/>
       <circle cx="16" cy="18" r="8" fill="#d5bdaf"/>
@@ -151,28 +150,12 @@ const PRESET_AVATARS = [
 ];
 
 // ==========================================
-// 2. 可爱萌宠表情包库 (纯可爱萌宠与动画特效)
+// 2. 预设表情图标库
 // ==========================================
 const PRESET_STICKERS = [
   {
-    id: 'heart_cat',
-    name: '喵咪比心',
-    svg: `<svg viewBox="0 0 100 100" class="sticker-svg-preview">
-      <circle cx="50" cy="55" r="32" fill="#ffe4ec" stroke="#ff758c" stroke-width="3"/>
-      <polygon points="26,35 34,18 45,32" fill="#ff758c"/>
-      <polygon points="74,35 66,18 55,32" fill="#ff758c"/>
-      <circle cx="40" cy="52" r="3.5" fill="#3a2835"/>
-      <circle cx="60" cy="52" r="3.5" fill="#3a2835"/>
-      <ellipse cx="50" cy="60" rx="3.5" ry="2.5" fill="#ff4081"/>
-      <path d="M46 62 Q50 66 54 62" stroke="#3a2835" stroke-width="2" fill="none"/>
-      <!-- 大心心 -->
-      <path d="M50 32 C50 20, 28 20, 28 36 C28 48, 50 64, 50 64 C50 64, 72 48, 72 36 C72 20, 50 20, 50 32 Z" fill="#ff3366" stroke="#ffffff" stroke-width="2"/>
-      <text x="50" y="44" text-anchor="middle" font-size="12" fill="#ffffff" font-weight="bold">LOVE</text>
-    </svg>`
-  },
-  {
     id: 'shiba_thumbs',
-    name: '柴柴点赞',
+    name: '点赞',
     svg: `<svg viewBox="0 0 100 100" class="sticker-svg-preview">
       <circle cx="50" cy="50" r="34" fill="#f59e0b" stroke="#d97706" stroke-width="3"/>
       <polygon points="22,30 32,12 40,28" fill="#d97706"/>
@@ -182,7 +165,6 @@ const PRESET_STICKERS = [
       <circle cx="62" cy="46" r="3.5" fill="#1f2937"/>
       <ellipse cx="50" cy="52" rx="4" ry="2.8" fill="#1f2937"/>
       <path d="M46 56 Q50 61 54 56" stroke="#1f2937" stroke-width="2" fill="none"/>
-      <!-- 点赞大拇指 -->
       <g transform="translate(62, 52) scale(0.9)">
         <circle cx="16" cy="16" r="16" fill="#10b981" stroke="#ffffff" stroke-width="2"/>
         <text x="16" y="22" text-anchor="middle" font-size="18">👍</text>
@@ -190,25 +172,63 @@ const PRESET_STICKERS = [
     </svg>`
   },
   {
-    id: 'bunny_cry',
-    name: '兔兔泪目',
+    id: 'heart_cat',
+    name: '比心',
     svg: `<svg viewBox="0 0 100 100" class="sticker-svg-preview">
-      <circle cx="50" cy="58" r="30" fill="#ffffff" stroke="#f472b6" stroke-width="3"/>
-      <ellipse cx="38" cy="24" rx="8" ry="20" fill="#ffffff" stroke="#f472b6" stroke-width="3"/>
-      <ellipse cx="62" cy="24" rx="8" ry="20" fill="#ffffff" stroke="#f472b6" stroke-width="3"/>
-      <ellipse cx="38" cy="24" rx="4" ry="14" fill="#fbcfe8"/>
-      <ellipse cx="62" cy="24" rx="4" ry="14" fill="#fbcfe8"/>
-      <circle cx="40" cy="55" r="4.5" fill="#1e293b"/>
-      <circle cx="60" cy="55" r="4.5" fill="#1e293b"/>
-      <!-- 泪泉喷涌 -->
-      <path d="M36 58 Q30 75 34 85" stroke="#38bdf8" stroke-width="4" fill="none" stroke-linecap="round"/>
-      <path d="M64 58 Q70 75 66 85" stroke="#38bdf8" stroke-width="4" fill="none" stroke-linecap="round"/>
-      <polygon points="50,62 47,59 53,59" fill="#f43f5e"/>
+      <circle cx="50" cy="55" r="32" fill="#ffe4ec" stroke="#ff758c" stroke-width="3"/>
+      <polygon points="26,35 34,18 45,32" fill="#ff758c"/>
+      <polygon points="74,35 66,18 55,32" fill="#ff758c"/>
+      <circle cx="40" cy="52" r="3.5" fill="#3a2835"/>
+      <circle cx="60" cy="52" r="3.5" fill="#3a2835"/>
+      <ellipse cx="50" cy="60" rx="3.5" ry="2.5" fill="#ff4081"/>
+      <path d="M46 62 Q50 66 54 62" stroke="#3a2835" stroke-width="2" fill="none"/>
+      <path d="M50 32 C50 20, 28 20, 28 36 C28 48, 50 64, 50 64 C50 64, 72 48, 72 36 C72 20, 50 20, 50 32 Z" fill="#ff3366" stroke="#ffffff" stroke-width="2"/>
+      <text x="50" y="44" text-anchor="middle" font-size="11" fill="#ffffff" font-weight="bold">OK</text>
+    </svg>`
+  },
+  {
+    id: 'party_popper',
+    name: '庆祝',
+    svg: `<svg viewBox="0 0 100 100" class="sticker-svg-preview">
+      <circle cx="50" cy="50" r="32" fill="#fdf4ff" stroke="#c084fc" stroke-width="3"/>
+      <text x="50" y="58" text-anchor="middle" font-size="38">🎉</text>
+      <text x="50" y="88" text-anchor="middle" font-size="13" font-weight="bold" fill="#a855f7">太棒了</text>
+    </svg>`
+  },
+  {
+    id: 'boba_panda',
+    name: '喝茶',
+    svg: `<svg viewBox="0 0 100 100" class="sticker-svg-preview">
+      <circle cx="28" cy="30" r="11" fill="#1f2937"/>
+      <circle cx="72" cy="30" r="11" fill="#1f2937"/>
+      <circle cx="50" cy="50" r="32" fill="#ffffff" stroke="#1f2937" stroke-width="3"/>
+      <ellipse cx="38" cy="48" rx="6" ry="7" fill="#1f2937" transform="rotate(-15 38 48)"/>
+      <ellipse cx="62" cy="48" rx="6" ry="7" fill="#1f2937" transform="rotate(15 62 48)"/>
+      <circle cx="40" cy="46" r="2" fill="#fff"/>
+      <circle cx="60" cy="46" r="2" fill="#fff"/>
+      <polygon points="42,58 44,82 56,82 58,58" fill="#fed7aa" stroke="#78350f" stroke-width="2"/>
+      <line x1="50" y1="52" x2="50" y2="76" stroke="#ef4444" stroke-width="2.5"/>
+      <text x="50" y="96" text-anchor="middle" font-size="11" font-weight="bold" fill="#78350f">🧋 休息一下</text>
+    </svg>`
+  },
+  {
+    id: 'hamster_food',
+    name: '加餐',
+    svg: `<svg viewBox="0 0 100 100" class="sticker-svg-preview">
+      <circle cx="50" cy="54" r="32" fill="#fbbf24" stroke="#d97706" stroke-width="3"/>
+      <ellipse cx="50" cy="62" rx="20" ry="16" fill="#ffffff"/>
+      <circle cx="36" cy="48" r="3.5" fill="#1f2937"/>
+      <circle cx="64" cy="48" r="3.5" fill="#1f2937"/>
+      <ellipse cx="26" cy="58" rx="7" ry="5" fill="#fca5a5" opacity="0.8"/>
+      <ellipse cx="74" cy="58" rx="7" ry="5" fill="#fca5a5" opacity="0.8"/>
+      <polygon points="50,56 42,72 58,72" fill="#ef4444" stroke="#1f2937" stroke-width="1.5"/>
+      <circle cx="50" cy="65" r="1.5" fill="#1f2937"/>
+      <text x="50" y="94" text-anchor="middle" font-size="12" font-weight="bold" fill="#d97706">开饭啦</text>
     </svg>`
   },
   {
     id: 'rich_piggy',
-    name: '暴富发财',
+    name: '发财',
     svg: `<svg viewBox="0 0 100 100" class="sticker-svg-preview">
       <circle cx="50" cy="52" r="32" fill="#fda4af" stroke="#f43f5e" stroke-width="3"/>
       <polygon points="26,30 32,15 42,28" fill="#f43f5e"/>
@@ -218,59 +238,32 @@ const PRESET_STICKERS = [
       <circle cx="54" cy="58" r="2" fill="#fff"/>
       <circle cx="38" cy="46" r="3.5" fill="#1f2937"/>
       <circle cx="62" cy="46" r="3.5" fill="#1f2937"/>
-      <!-- 金币雨 -->
       <circle cx="20" cy="25" r="9" fill="#fbbf24" stroke="#d97706" stroke-width="2"/>
       <text x="20" y="29" text-anchor="middle" font-size="10" font-weight="bold" fill="#78350f">¥</text>
       <circle cx="80" cy="25" r="9" fill="#fbbf24" stroke="#d97706" stroke-width="2"/>
       <text x="80" y="29" text-anchor="middle" font-size="10" font-weight="bold" fill="#78350f">¥</text>
-      <text x="50" y="88" text-anchor="middle" font-size="14" font-weight="bold" fill="#f43f5e">💰 暴富 💰</text>
+      <text x="50" y="88" text-anchor="middle" font-size="13" font-weight="bold" fill="#f43f5e">💰 好运连连</text>
     </svg>`
   },
   {
-    id: 'boba_panda',
-    name: '奶茶续命',
+    id: 'bunny_cry',
+    name: '流泪',
     svg: `<svg viewBox="0 0 100 100" class="sticker-svg-preview">
-      <circle cx="28" cy="30" r="11" fill="#1f2937"/>
-      <circle cx="72" cy="30" r="11" fill="#1f2937"/>
-      <circle cx="50" cy="50" r="32" fill="#ffffff" stroke="#1f2937" stroke-width="3"/>
-      <ellipse cx="38" cy="48" rx="6" ry="7" fill="#1f2937" transform="rotate(-15 38 48)"/>
-      <ellipse cx="62" cy="48" rx="6" ry="7" fill="#1f2937" transform="rotate(15 62 48)"/>
-      <circle cx="40" cy="46" r="2" fill="#fff"/>
-      <circle cx="60" cy="46" r="2" fill="#fff"/>
-      <!-- 奶茶杯 -->
-      <polygon points="42,58 44,82 56,82 58,58" fill="#fed7aa" stroke="#78350f" stroke-width="2"/>
-      <line x1="50" y1="52" x2="50" y2="76" stroke="#ef4444" stroke-width="2.5"/>
-      <text x="50" y="96" text-anchor="middle" font-size="11" font-weight="bold" fill="#78350f">🧋 吨吨吨</text>
-    </svg>`
-  },
-  {
-    id: 'hamster_food',
-    name: '吃饱饱啦',
-    svg: `<svg viewBox="0 0 100 100" class="sticker-svg-preview">
-      <circle cx="50" cy="54" r="32" fill="#fbbf24" stroke="#d97706" stroke-width="3"/>
-      <ellipse cx="50" cy="62" rx="20" ry="16" fill="#ffffff"/>
-      <circle cx="36" cy="48" r="3.5" fill="#1f2937"/>
-      <circle cx="64" cy="48" r="3.5" fill="#1f2937"/>
-      <ellipse cx="26" cy="58" rx="7" ry="5" fill="#fca5a5" opacity="0.8"/>
-      <ellipse cx="74" cy="58" rx="7" ry="5" fill="#fca5a5" opacity="0.8"/>
-      <!-- 瓜子/西瓜 -->
-      <polygon points="50,56 42,72 58,72" fill="#ef4444" stroke="#1f2937" stroke-width="1.5"/>
-      <circle cx="50" cy="65" r="1.5" fill="#1f2937"/>
-      <text x="50" y="94" text-anchor="middle" font-size="12" font-weight="bold" fill="#d97706">✨ 幸福干饭 ✨</text>
-    </svg>`
-  },
-  {
-    id: 'party_popper',
-    name: '开香槟喽',
-    svg: `<svg viewBox="0 0 100 100" class="sticker-svg-preview">
-      <circle cx="50" cy="50" r="32" fill="#fdf4ff" stroke="#c084fc" stroke-width="3"/>
-      <text x="50" y="58" text-anchor="middle" font-size="38">🎉</text>
-      <text x="50" y="88" text-anchor="middle" font-size="13" font-weight="bold" fill="#a855f7">芜湖起飞 🚀</text>
+      <circle cx="50" cy="58" r="30" fill="#ffffff" stroke="#f472b6" stroke-width="3"/>
+      <ellipse cx="38" cy="24" rx="8" ry="20" fill="#ffffff" stroke="#f472b6" stroke-width="3"/>
+      <ellipse cx="62" cy="24" rx="8" ry="20" fill="#ffffff" stroke="#f472b6" stroke-width="3"/>
+      <ellipse cx="38" cy="24" rx="4" ry="14" fill="#fbcfe8"/>
+      <ellipse cx="62" cy="24" rx="4" ry="14" fill="#fbcfe8"/>
+      <circle cx="40" cy="55" r="4.5" fill="#1e293b"/>
+      <circle cx="60" cy="55" r="4.5" fill="#1e293b"/>
+      <path d="M36 58 Q30 75 34 85" stroke="#38bdf8" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M64 58 Q70 75 66 85" stroke="#38bdf8" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <polygon points="50,62 47,59 53,59" fill="#f43f5e"/>
     </svg>`
   },
   {
     id: 'sleep_zzz',
-    name: '晚安睡啦',
+    name: '晚安',
     svg: `<svg viewBox="0 0 100 100" class="sticker-svg-preview">
       <circle cx="50" cy="52" r="32" fill="#f5ebe0" stroke="#8d6e63" stroke-width="3"/>
       <circle cx="26" cy="30" r="9" fill="#8d6e63"/>
@@ -279,91 +272,35 @@ const PRESET_STICKERS = [
       <path d="M54 50 Q60 56 66 50" stroke="#4a3e3d" stroke-width="2.5" fill="none"/>
       <ellipse cx="50" cy="58" rx="4" ry="2.5" fill="#4a3e3d"/>
       <text x="68" y="32" font-size="16" font-weight="bold" fill="#8d6e63">Zzz</text>
-      <text x="50" y="92" text-anchor="middle" font-size="12" font-weight="bold" fill="#8d6e63">🌙 好梦晚安</text>
+      <text x="50" y="92" text-anchor="middle" font-size="12" font-weight="bold" fill="#8d6e63">🌙 晚安</text>
     </svg>`
   }
 ];
 
 // ==========================================
-// 3. 预设聊天剧本库
+// 3. 示例对话配置（仅在点击“载入使用示例”时加载）
 // ==========================================
 const PRESET_SCRIPTS = {
-  supper: {
-    title: '🍗 今晚吃什么大讨论 (3)',
-    status: '在线 · 美食侦探分队',
+  demo: {
+    title: '聊天对象',
+    status: '在线',
     characters: [
-      { id: 'cat', name: '咪咪队长 🐾', avatar: { type: 'preset', id: 'cat' }, side: 'left', theme: 'pink' },
-      { id: 'dog', name: '柴柴侦探 🐶', avatar: { type: 'preset', id: 'shiba' }, side: 'right', theme: 'green' },
-      { id: 'bunny', name: '软软兔 🐰', avatar: { type: 'preset', id: 'bunny' }, side: 'left', theme: 'purple' }
+      { id: 'char_1', name: '角色1', avatar: { type: 'preset', id: 'cat' }, side: 'left', theme: 'white' },
+      { id: 'char_2', name: '角色2', avatar: { type: 'preset', id: 'shiba' }, side: 'right', theme: 'green' }
     ],
     messages: [
-      { charId: 'cat', type: 'text', content: '呼叫全员！今晚夜宵吃炸鸡还是麻辣烫？🍗', delay: 1100 },
-      { charId: 'dog', type: 'text', content: '必须是蜜汁脆皮大炸鸡！我都流口水了~ 🤤', delay: 1000 },
-      { charId: 'dog', type: 'sticker', stickerId: 'shiba_thumbs', delay: 1200 },
-      { charId: 'bunny', type: 'text', content: '附议炸鸡！再加一杯微糖芋圆奶茶！🧋✨', delay: 1100 },
-      { charId: 'cat', type: 'sticker', stickerId: 'boba_panda', delay: 1000 },
-      { charId: 'cat', type: 'text', content: '好耶！火速下单，半小时后客厅集合干饭！🎉', delay: 1200 },
-      { charId: 'dog', type: 'sticker', stickerId: 'hamster_food', delay: 1200 }
-    ]
-  },
-  rich: {
-    title: '💰 暴富理财梦想群 (3)',
-    status: '在线 · 准备提新车啦',
-    characters: [
-      { id: 'cat', name: '喵总 🐾', avatar: { type: 'preset', id: 'cat' }, side: 'left', theme: 'yellow' },
-      { id: 'dog', name: '柴总 🐶', avatar: { type: 'preset', id: 'shiba' }, side: 'right', theme: 'green' },
-      { id: 'pig', name: '福气小猪 🐷', avatar: { type: 'preset', id: 'piggy' }, side: 'left', theme: 'pink' }
-    ],
-    messages: [
-      { charId: 'dog', type: 'text', content: '家人们！今天我的股票直接连板涨停翻倍了！！🚀🚀', delay: 1100 },
-      { charId: 'dog', type: 'sticker', stickerId: 'party_popper', delay: 1200 },
-      { charId: 'cat', type: 'text', content: '哇塞牛气冲天！暴富后的第一件事打算干啥？🤩', delay: 1000 },
-      { charId: 'dog', type: 'text', content: '先给你们每人买一整箱进口罐头和小零食！🎁', delay: 1100 },
-      { charId: 'pig', type: 'sticker', stickerId: 'rich_piggy', delay: 1100 },
-      { charId: 'pig', type: 'text', content: '跟着柴总有肉吃！柴总大气！财运常在发大财！✨', delay: 1200 },
-      { charId: 'cat', type: 'sticker', stickerId: 'heart_cat', delay: 1100 }
-    ]
-  },
-  weekend: {
-    title: '🏕️ 周末露营小分队 (3)',
-    status: '在线 · 阳光明媚出发',
-    characters: [
-      { id: 'bunny', name: '兔兔导游 🐰', avatar: { type: 'preset', id: 'bunny' }, side: 'left', theme: 'purple' },
-      { id: 'dog', name: '柴柴后勤 🐶', avatar: { type: 'preset', id: 'shiba' }, side: 'right', theme: 'green' },
-      { id: 'cat', name: '咪咪大厨 🐾', avatar: { type: 'preset', id: 'cat' }, side: 'left', theme: 'pink' }
-    ],
-    messages: [
-      { charId: 'bunny', type: 'text', content: '周末天气超好！大草坪露营装备准备好了吗？⛺️', delay: 1100 },
-      { charId: 'dog', type: 'text', content: '帐篷、野餐垫、飞盘和蓝牙音响已全部装车！🚙', delay: 1100 },
-      { charId: 'cat', type: 'text', content: '我带了自制三明治、草莓小蛋糕还有冰镇柠檬茶！🍓🍰', delay: 1200 },
-      { charId: 'bunny', type: 'sticker', stickerId: 'heart_cat', delay: 1100 },
-      { charId: 'dog', type: 'text', content: '太棒了，周六早上九点准时出发，冲鸭！☀️', delay: 1100 },
-      { charId: 'dog', type: 'sticker', stickerId: 'shiba_thumbs', delay: 1100 }
-    ]
-  },
-  comfort: {
-    title: '🌸 温暖治愈小树洞',
-    status: '在线 · 倾听你的心声',
-    characters: [
-      { id: 'cat', name: '小猫咪 🐾', avatar: { type: 'preset', id: 'cat' }, side: 'left', theme: 'pink' },
-      { id: 'bear', name: '温柔熊熊 🐻', avatar: { type: 'preset', id: 'bear' }, side: 'right', theme: 'yellow' }
-    ],
-    messages: [
-      { charId: 'cat', type: 'text', content: '熊熊，今天感觉有点累累的... 🌧️', delay: 1100 },
-      { charId: 'cat', type: 'sticker', stickerId: 'bunny_cry', delay: 1200 },
-      { charId: 'bear', type: 'text', content: '抱抱你呀小猫咪！辛苦啦，给你的心充充电~ 💖', delay: 1100 },
-      { charId: 'bear', type: 'text', content: '今晚泡个热水澡，喝杯暖牛奶，好好睡个甜甜的觉！🥛', delay: 1200 },
-      { charId: 'bear', type: 'sticker', stickerId: 'sleep_zzz', delay: 1100 },
-      { charId: 'cat', type: 'text', content: '嗯嗯！被治愈到了，谢谢熊熊，晚安安！✨', delay: 1100 },
-      { charId: 'cat', type: 'sticker', stickerId: 'heart_cat', delay: 1100 }
+      { charId: 'char_1', type: 'text', content: '你好，下午需要的视频素材已经整理好了吗？', delay: 1100 },
+      { charId: 'char_2', type: 'text', content: '已经全部整理完毕，现在发给你确认。', delay: 1100 },
+      { charId: 'char_2', type: 'sticker', stickerId: 'shiba_thumbs', delay: 1100 },
+      { charId: 'char_1', type: 'text', content: '收到，确认没问题，辛苦了！', delay: 1100 }
     ]
   }
 };
 
 // ==========================================
-// 4. 萌系 Web Audio 合成器 (气泡弹跳音效)
+// 4. Web Audio 消息提示音合成器
 // ==========================================
-class KawaiiSoundEngine {
+class ChatSoundEngine {
   constructor() {
     this.audioCtx = null;
     this.enabled = true;
@@ -381,7 +318,6 @@ class KawaiiSoundEngine {
     }
   }
 
-  // 消息气泡弹出微水滴音
   playBubblePop(freq = 640) {
     if (!this.enabled) return;
     this.init();
@@ -396,7 +332,7 @@ class KawaiiSoundEngine {
       osc.frequency.setValueAtTime(freq, now);
       osc.frequency.exponentialRampToValueAtTime(freq * 1.8, now + 0.08);
 
-      gain.gain.setValueAtTime(0.18, now);
+      gain.gain.setValueAtTime(0.16, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
 
       osc.connect(gain);
@@ -407,14 +343,13 @@ class KawaiiSoundEngine {
     } catch (e) {}
   }
 
-  // 表情包欢快琶音
   playStickerChime() {
     if (!this.enabled) return;
     this.init();
     if (!this.audioCtx) return;
 
     try {
-      const notes = [659.25, 830.61, 987.77]; // E5, G#5, B5 亮丽大三和弦
+      const notes = [659.25, 830.61, 987.77];
       const now = this.audioCtx.currentTime;
 
       notes.forEach((freq, idx) => {
@@ -424,7 +359,7 @@ class KawaiiSoundEngine {
 
         const startTime = now + idx * 0.05;
         osc.frequency.setValueAtTime(freq, startTime);
-        gain.gain.setValueAtTime(0.12, startTime);
+        gain.gain.setValueAtTime(0.11, startTime);
         gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.2);
 
         osc.connect(gain);
@@ -442,12 +377,13 @@ class KawaiiSoundEngine {
 }
 
 // ==========================================
-// 5. 核心：聊天模拟器应用程序控制器
+// 5. 核心：聊天模拟器控制器
 // ==========================================
-class KawaiiChatApp {
+class ChatSimulatorApp {
   constructor() {
     this.characters = [];
     this.messages = [];
+    this.playableMessages = [];
     this.currentPlayIndex = 0;
     this.isPlaying = false;
     this.isPaused = false;
@@ -455,19 +391,17 @@ class KawaiiChatApp {
     this.countdownTimer = null;
     this.speedMultiplier = 1.0;
 
-    // 当前正在更换头像的角色 ID
     this.editingAvatarCharId = null;
-    // 当前正在选择表情包的消息 ID
     this.editingStickerMsgId = null;
 
-    this.sound = new KawaiiSoundEngine();
+    this.sound = new ChatSoundEngine();
 
     this.cacheElements();
     this.bindEvents();
     this.initClock();
 
-    // 默认载入夜宵讨论剧本
-    this.loadPreset('supper');
+    // 默认初始化空白对话，方便用户直接输入，无需先删默认占位剧本
+    this.initDefaultState();
     this.renderAvatarModal();
     this.renderStickerModal();
   }
@@ -476,7 +410,6 @@ class KawaiiChatApp {
     // 手机屏幕内
     this.statusClock = document.getElementById('statusClock');
     this.screenChatTitle = document.getElementById('screenChatTitle');
-    this.screenChatBadge = document.getElementById('screenChatBadge');
     this.screenChatStatus = document.getElementById('screenChatStatus');
     this.chatMessagesContainer = document.getElementById('chatMessagesContainer');
     this.chatMessagesList = document.getElementById('chatMessagesList');
@@ -500,6 +433,7 @@ class KawaiiChatApp {
     this.audioIcon = document.getElementById('audioIcon');
     this.audioText = document.getElementById('audioText');
     this.resetChatBtn = document.getElementById('resetChatBtn');
+    this.btnClearMessages = document.getElementById('btnClearMessages');
 
     // 角色管理
     this.charactersGrid = document.getElementById('charactersGrid');
@@ -537,7 +471,7 @@ class KawaiiChatApp {
   bindEvents() {
     // 1. 顶部聊天标题与状态实时同步
     this.chatTitleInput.addEventListener('input', (e) => {
-      this.screenChatTitle.textContent = e.target.value.trim() || '萌萌聊天室';
+      this.screenChatTitle.textContent = e.target.value.trim() || '聊天对象';
     });
 
     this.chatStatusInput.addEventListener('input', (e) => {
@@ -550,16 +484,21 @@ class KawaiiChatApp {
       this.speedMultiplier = 1200 / baseMs;
     });
 
-    // 3. 剧本预设切换
-    document.querySelectorAll('.preset-chip').forEach(chip => {
+    // 3. 示例对话载入与清空按钮
+    document.querySelectorAll('.preset-chip[data-preset]').forEach(chip => {
       chip.addEventListener('click', () => {
-        document.querySelectorAll('.preset-chip').forEach(c => c.classList.remove('active'));
-        chip.classList.add('active');
         const key = chip.getAttribute('data-preset');
         this.loadPreset(key);
-        this.sound.playPop(700);
+        this.sound.playPop(640);
       });
     });
+
+    if (this.btnClearMessages) {
+      this.btnClearMessages.addEventListener('click', () => {
+        this.clearAllMessages();
+        this.sound.playPop(480);
+      });
+    }
 
     // 4. 添加新角色
     this.btnAddCharacter.addEventListener('click', () => {
@@ -567,7 +506,7 @@ class KawaiiChatApp {
       this.sound.playPop(620);
     });
 
-    // 5. 添加文字消息与表情包
+    // 5. 添加文字消息与表情/图片
     this.btnAddTextMsgBtn.addEventListener('click', () => {
       this.addNewMessage('text');
       this.sound.playPop(600);
@@ -610,10 +549,10 @@ class KawaiiChatApp {
         this.sound.init();
         this.sound.playStickerChime();
         this.audioIcon.textContent = '🔔';
-        this.audioText.textContent = '萌音开';
+        this.audioText.textContent = '音效开';
       } else {
         this.audioIcon.textContent = '🔕';
-        this.audioText.textContent = '萌音关';
+        this.audioText.textContent = '音效关';
       }
     });
 
@@ -703,7 +642,7 @@ class KawaiiChatApp {
           this.setMessageSticker(this.editingStickerMsgId, {
             type: 'custom',
             src: event.target.result,
-            name: file.name.split('.')[0] || '自定义表情'
+            name: file.name.split('.')[0] || '自定义图片'
           });
           this.closeStickerModal();
           this.sound.playStickerChime();
@@ -724,14 +663,60 @@ class KawaiiChatApp {
     setInterval(updateTime, 30000);
   }
 
-  // 纯色背景应用
   applyChromaBackground(color) {
     document.body.classList.remove('chroma-green', 'chroma-blue', 'chroma-magenta', 'chroma-black', 'chroma-white', 'chroma-active');
     if (color === 'cute') return;
     document.body.classList.add(`chroma-${color}`, 'chroma-active');
   }
 
-  // 载入预设聊天剧本
+  // 初始化默认状态：角色1、角色2，以及一条空白可输入消息（无需删除默认剧本）
+  initDefaultState() {
+    this.resetPlaybackState();
+
+    this.screenChatTitle.textContent = '聊天对象';
+    this.chatTitleInput.value = '聊天对象';
+    this.screenChatStatus.textContent = '在线';
+    this.chatStatusInput.value = '在线';
+
+    this.characters = [
+      { id: 'char_1', name: '角色1', avatar: { type: 'preset', id: 'cat' }, side: 'left', theme: 'white' },
+      { id: 'char_2', name: '角色2', avatar: { type: 'preset', id: 'shiba' }, side: 'right', theme: 'green' }
+    ];
+
+    this.messages = [
+      {
+        id: `msg_${Date.now()}_0`,
+        charId: 'char_1',
+        type: 'text',
+        content: '',
+        delay: 1200
+      }
+    ];
+
+    this.renderCharactersGrid();
+    this.renderMessagesTable();
+    this.resetChat();
+  }
+
+  // 清空对话列表，恢复为一条空白输入框
+  clearAllMessages() {
+    this.resetPlaybackState();
+    const firstCharId = this.characters[0] ? this.characters[0].id : 'char_1';
+    this.messages = [
+      {
+        id: `msg_${Date.now()}_0`,
+        charId: firstCharId,
+        type: 'text',
+        content: '',
+        delay: 1200
+      }
+    ];
+    this.renderMessagesTable();
+    this.resetChat();
+    this.playStatusText.textContent = '已清空对话列表，请直接输入新的对话内容';
+  }
+
+  // 载入使用示例
   loadPreset(key) {
     this.resetPlaybackState();
     const config = PRESET_SCRIPTS[key];
@@ -742,7 +727,6 @@ class KawaiiChatApp {
     this.screenChatStatus.textContent = config.status;
     this.chatStatusInput.value = config.status;
 
-    // 深度拷贝角色列表与消息列表
     this.characters = JSON.parse(JSON.stringify(config.characters));
     this.messages = JSON.parse(JSON.stringify(config.messages)).map((m, idx) => ({
       ...m,
@@ -752,49 +736,49 @@ class KawaiiChatApp {
     this.renderCharactersGrid();
     this.renderMessagesTable();
     this.resetChat();
+    this.playStatusText.textContent = '已载入示例对话，点击「开始播放对话」即可预览效果';
   }
 
   // ==========================================
-  // 6. 核心：角色管理与头像永久自动绑定
+  // 6. 角色管理与头像自动绑定
   // ==========================================
   renderCharactersGrid() {
     this.charactersGrid.innerHTML = '';
 
-    this.characters.forEach((char) => {
+    this.characters.forEach((char, idx) => {
       const card = document.createElement('div');
       card.className = 'character-card';
       card.id = `charCard_${char.id}`;
 
-      // 头像展示（预设SVG或用户自定义上传的图片）
       let avatarHtml = '';
       if (char.avatar.type === 'custom' && char.avatar.src) {
-        avatarHtml = `<img src="${char.avatar.src}" class="slot-img" alt="${char.name}">`;
+        avatarHtml = `<img src="${char.avatar.src}" class="slot-img" alt="${this.escapeHtml(char.name)}">`;
       } else {
         const preset = PRESET_AVATARS.find(a => a.id === char.avatar.id) || PRESET_AVATARS[0];
         avatarHtml = preset.svg;
       }
 
       card.innerHTML = `
-        <div class="char-avatar-slot" title="点击更换头像 (永久绑定此角色)" data-char-id="${char.id}">
+        <div class="char-avatar-slot" title="点击更换头像" data-char-id="${char.id}">
           ${avatarHtml}
           <span class="slot-badge">✏️</span>
         </div>
         <div class="char-meta-col">
-          <input type="text" class="char-name-input" value="${char.name}" data-char-id="${char.id}" placeholder="角色昵称" maxlength="12">
+          <input type="text" class="char-name-input" value="${this.escapeHtml(char.name)}" data-char-id="${char.id}" data-idx="${idx + 1}" placeholder="角色名称" maxlength="14">
           <div class="char-options-row">
             <select class="char-side-select" data-char-id="${char.id}" title="消息显示在左侧还是右侧">
               <option value="left" ${char.side === 'left' ? 'selected' : ''}>左侧 (对方)</option>
               <option value="right" ${char.side === 'right' ? 'selected' : ''}>右侧 (自己)</option>
             </select>
-            <select class="char-color-select" data-char-id="${char.id}" title="气泡色彩风格">
-              <option value="pink" ${char.theme === 'pink' ? 'selected' : ''}>🌸 樱粉</option>
-              <option value="green" ${char.theme === 'green' ? 'selected' : ''}>🍃 薄荷</option>
-              <option value="yellow" ${char.theme === 'yellow' ? 'selected' : ''}>☀️ 暖黄</option>
-              <option value="purple" ${char.theme === 'purple' ? 'selected' : ''}>🍇 浅紫</option>
-              <option value="blue" ${char.theme === 'blue' ? 'selected' : ''}>🌊 晴蓝</option>
-              <option value="white" ${char.theme === 'white' ? 'selected' : ''}>🥛 奶白</option>
+            <select class="char-color-select" data-char-id="${char.id}" title="气泡背景颜色">
+              <option value="white" ${char.theme === 'white' ? 'selected' : ''}>⚪ 简约白</option>
+              <option value="green" ${char.theme === 'green' ? 'selected' : ''}>🟢 微信绿</option>
+              <option value="blue" ${char.theme === 'blue' ? 'selected' : ''}>🔵 清新蓝</option>
+              <option value="pink" ${char.theme === 'pink' ? 'selected' : ''}>🌸 柔和粉</option>
+              <option value="yellow" ${char.theme === 'yellow' ? 'selected' : ''}>🟡 暖阳黄</option>
+              <option value="purple" ${char.theme === 'purple' ? 'selected' : ''}>🟣 淡雅紫</option>
             </select>
-            ${this.characters.length > 2 ? `<button type="button" class="char-del-btn" data-char-id="${char.id}" title="删除角色">🗑️</button>` : ''}
+            ${this.characters.length > 2 ? `<button type="button" class="char-del-btn" data-char-id="${char.id}" title="删除该角色">🗑️</button>` : ''}
           </div>
         </div>
       `;
@@ -802,9 +786,8 @@ class KawaiiChatApp {
       this.charactersGrid.appendChild(card);
     });
 
-    // 绑定角色卡片交互事件
     this.charactersGrid.querySelectorAll('.char-avatar-slot').forEach(slot => {
-      slot.addEventListener('click', (e) => {
+      slot.addEventListener('click', () => {
         const charId = slot.getAttribute('data-char-id');
         this.openAvatarModal(charId);
         this.sound.playPop(600);
@@ -814,10 +797,10 @@ class KawaiiChatApp {
     this.charactersGrid.querySelectorAll('.char-name-input').forEach(input => {
       input.addEventListener('change', (e) => {
         const charId = input.getAttribute('data-char-id');
+        const idx = input.getAttribute('data-idx') || '1';
         const char = this.characters.find(c => c.id === charId);
         if (char) {
-          char.name = e.target.value.trim() || '无名小萌宠';
-          // 自动同步更新消息列表中的角色下拉项与手机屏幕内气泡
+          char.name = e.target.value.trim() || `角色${idx}`;
           this.updateAllMessagesCharacterBinding();
         }
       });
@@ -860,10 +843,10 @@ class KawaiiChatApp {
     const defaultAvatar = presets[(idx - 1) % presets.length];
     const newChar = {
       id: `char_${Date.now()}`,
-      name: `${defaultAvatar.name} #${idx}`,
+      name: `角色${idx}`,
       avatar: { type: 'preset', id: defaultAvatar.id },
       side: idx % 2 === 0 ? 'right' : 'left',
-      theme: ['pink', 'green', 'yellow', 'purple', 'blue'][idx % 5]
+      theme: ['white', 'green', 'blue', 'pink', 'yellow', 'purple'][(idx - 1) % 6]
     };
     this.characters.push(newChar);
     this.renderCharactersGrid();
@@ -873,7 +856,6 @@ class KawaiiChatApp {
   deleteCharacter(charId) {
     if (this.characters.length <= 2) return;
     this.characters = this.characters.filter(c => c.id !== charId);
-    // 如果有消息引用了被删除角色，重定向到第一个角色
     const fallbackId = this.characters[0].id;
     this.messages.forEach(m => {
       if (m.charId === charId) m.charId = fallbackId;
@@ -882,10 +864,8 @@ class KawaiiChatApp {
     this.renderMessagesTable();
   }
 
-  // 角色头像、昵称或颜色修改后，所有绑定该角色的消息全自动同步
   updateAllMessagesCharacterBinding() {
     this.renderMessagesTable();
-    // 如果屏幕上有已渲染的气泡，同步更新头像与昵称
     this.syncRenderedBubbles();
   }
 
@@ -898,82 +878,86 @@ class KawaiiChatApp {
   }
 
   // ==========================================
-  // 7. 聊天消息列表管理 (文本与表情包)
+  // 7. 聊天消息列表管理 (竖向卡片布局，无需横向滚动)
   // ==========================================
   renderMessagesTable() {
     this.messagesTableBody.innerHTML = '';
     this.messagesCountTag.textContent = `共 ${this.messages.length} 条消息`;
 
     this.messages.forEach((msg, idx) => {
-      const tr = document.createElement('tr');
-      tr.id = `msgTableRow_${msg.id}`;
-      if (idx === this.currentPlayIndex && this.isPlaying) {
-        tr.classList.add('active-playback-row');
-      }
+      const card = document.createElement('div');
+      card.className = 'msg-editor-card';
+      card.id = `msgTableRow_${msg.id}`;
 
-      // 角色下拉选择框选项（自动绑定该角色头像和颜色）
       const charOptionsHtml = this.characters.map(c => `
         <option value="${c.id}" ${c.id === msg.charId ? 'selected' : ''}>
-          ${c.name} (${c.side === 'left' ? '左' : '右'})
+          ${this.escapeHtml(c.name)} (${c.side === 'left' ? '左侧' : '右侧'})
         </option>
       `).join('');
 
-      // 内容单元格：文本输入框 或 表情包选择按钮
       let contentHtml = '';
       if (msg.type === 'sticker') {
         let stickerPreview = '';
         if (msg.stickerObj) {
           if (msg.stickerObj.type === 'custom') {
-            stickerPreview = `<img src="${msg.stickerObj.src}" class="table-sticker-thumb" alt="表情"> <span>${msg.stickerObj.name || '本地表情'}</span>`;
+            stickerPreview = `<img src="${msg.stickerObj.src}" class="table-sticker-thumb" alt="图片"> <span class="sticker-label-text">${this.escapeHtml(msg.stickerObj.name || '自定义图片')}</span>`;
           } else {
             const presetSticker = PRESET_STICKERS.find(s => s.id === msg.stickerObj.id) || PRESET_STICKERS[0];
-            stickerPreview = `${presetSticker.svg} <span>${presetSticker.name}</span>`;
+            stickerPreview = `${presetSticker.svg} <span class="sticker-label-text">${presetSticker.name}</span>`;
           }
         } else {
           const defaultSticker = PRESET_STICKERS.find(s => s.id === msg.stickerId) || PRESET_STICKERS[0];
-          stickerPreview = `${defaultSticker.svg} <span>${defaultSticker.name}</span>`;
+          stickerPreview = `${defaultSticker.svg} <span class="sticker-label-text">${defaultSticker.name}</span>`;
         }
         contentHtml = `
-          <button type="button" class="table-sticker-btn" data-msg-id="${msg.id}" title="点击更换表情包">
-            ${stickerPreview}
-            <span style="font-size:11px; color:#ff477e;">(点我换)</span>
+          <button type="button" class="table-sticker-btn" data-msg-id="${msg.id}" title="点击更换表情或上传图片">
+            <div class="sticker-btn-left">${stickerPreview}</div>
+            <span class="sticker-change-link">点击选择表情 / 上传图片</span>
           </button>
         `;
       } else {
         contentHtml = `
-          <input type="text" class="table-text-input" value="${this.escapeHtml(msg.content || '')}" data-msg-id="${msg.id}" placeholder="输入消息文本内容..." maxlength="120">
+          <input type="text" class="table-text-input" value="${this.escapeHtml(msg.content || '')}" data-msg-id="${msg.id}" placeholder="请输入对话文字内容..." maxlength="200">
         `;
       }
 
-      tr.innerHTML = `
-        <td><span class="msg-index-badge">${idx + 1}</span></td>
-        <td>
-          <select class="table-char-select" data-msg-id="${msg.id}">
-            ${charOptionsHtml}
-          </select>
-        </td>
-        <td>
-          <span class="msg-type-pill ${msg.type}">
-            ${msg.type === 'sticker' ? '🎨 表情' : '💬 文字'}
-          </span>
-        </td>
-        <td>${contentHtml}</td>
-        <td>
-          <input type="number" class="table-delay-input" value="${msg.delay || 1200}" step="100" min="200" max="8000" data-msg-id="${msg.id}" title="显示此条消息前的等待时长(ms)">
-        </td>
-        <td>
-          <div class="table-actions-cell">
-            <button type="button" class="row-action-btn move-up-btn" data-idx="${idx}" title="上移">⬆️</button>
-            <button type="button" class="row-action-btn move-down-btn" data-idx="${idx}" title="下移">⬇️</button>
-            <button type="button" class="row-action-btn delete-msg-btn" data-idx="${idx}" title="删除">🗑️</button>
+      card.innerHTML = `
+        <!-- 第一行：序号 + 发言角色 + 消息类型切换 + 停顿时间 -->
+        <div class="msg-card-top-row">
+          <div class="msg-card-meta-left">
+            <span class="msg-index-badge">#${idx + 1}</span>
+            <select class="table-char-select" data-msg-id="${msg.id}" title="选择发言角色">
+              ${charOptionsHtml}
+            </select>
+            <select class="table-type-select" data-msg-id="${msg.id}" title="切换文字或图片/表情">
+              <option value="text" ${msg.type === 'text' ? 'selected' : ''}>💬 文字</option>
+              <option value="sticker" ${msg.type === 'sticker' ? 'selected' : ''}>🖼️ 表情/图片</option>
+            </select>
           </div>
-        </td>
+          <div class="msg-card-delay-wrap">
+            <span class="delay-label">间隔</span>
+            <input type="number" class="table-delay-input" value="${msg.delay || 1200}" step="100" min="200" max="8000" data-msg-id="${msg.id}" title="播放下一条前的停顿时长(毫秒)">
+            <span class="delay-unit">ms</span>
+          </div>
+        </div>
+
+        <!-- 第二行（单独一行）：消息内容输入或图片选择 -->
+        <div class="msg-card-content-row">
+          ${contentHtml}
+        </div>
+
+        <!-- 第三行：上下移动和删除操作 -->
+        <div class="msg-card-actions-row">
+          <button type="button" class="row-action-btn move-up-btn" data-idx="${idx}" ${idx === 0 ? 'disabled' : ''} title="上移此条消息">↑ 上移</button>
+          <button type="button" class="row-action-btn move-down-btn" data-idx="${idx}" ${idx === this.messages.length - 1 ? 'disabled' : ''} title="下移此条消息">↓ 下移</button>
+          <button type="button" class="row-action-btn delete-msg-btn" data-idx="${idx}" title="删除此条消息">🗑️ 删除</button>
+        </div>
       `;
 
-      this.messagesTableBody.appendChild(tr);
+      this.messagesTableBody.appendChild(card);
     });
 
-    // 绑定表格内部输入事件
+    // 绑定角色选择事件
     this.messagesTableBody.querySelectorAll('.table-char-select').forEach(select => {
       select.addEventListener('change', (e) => {
         const msgId = select.getAttribute('data-msg-id');
@@ -985,6 +969,23 @@ class KawaiiChatApp {
       });
     });
 
+    // 绑定消息类型切换事件（文字 <-> 表情/图片）
+    this.messagesTableBody.querySelectorAll('.table-type-select').forEach(select => {
+      select.addEventListener('change', (e) => {
+        const msgId = select.getAttribute('data-msg-id');
+        const msg = this.messages.find(m => m.id === msgId);
+        if (msg) {
+          msg.type = e.target.value;
+          if (msg.type === 'sticker' && !msg.stickerId && !msg.stickerObj) {
+            msg.stickerId = 'shiba_thumbs';
+          }
+          this.renderMessagesTable();
+          this.sound.playPop(520);
+        }
+      });
+    });
+
+    // 绑定文本输入事件
     this.messagesTableBody.querySelectorAll('.table-text-input').forEach(input => {
       input.addEventListener('input', (e) => {
         const msgId = input.getAttribute('data-msg-id');
@@ -993,6 +994,7 @@ class KawaiiChatApp {
       });
     });
 
+    // 绑定表情/图片选择按钮事件
     this.messagesTableBody.querySelectorAll('.table-sticker-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const msgId = btn.getAttribute('data-msg-id');
@@ -1001,6 +1003,7 @@ class KawaiiChatApp {
       });
     });
 
+    // 绑定停顿间隔事件
     this.messagesTableBody.querySelectorAll('.table-delay-input').forEach(input => {
       input.addEventListener('change', (e) => {
         const msgId = input.getAttribute('data-msg-id');
@@ -1009,6 +1012,7 @@ class KawaiiChatApp {
       });
     });
 
+    // 绑定上移事件
     this.messagesTableBody.querySelectorAll('.move-up-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const idx = parseInt(btn.getAttribute('data-idx'), 10);
@@ -1022,6 +1026,7 @@ class KawaiiChatApp {
       });
     });
 
+    // 绑定下移事件
     this.messagesTableBody.querySelectorAll('.move-down-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const idx = parseInt(btn.getAttribute('data-idx'), 10);
@@ -1035,14 +1040,19 @@ class KawaiiChatApp {
       });
     });
 
+    // 绑定删除事件
     this.messagesTableBody.querySelectorAll('.delete-msg-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const idx = parseInt(btn.getAttribute('data-idx'), 10);
         if (this.messages.length > 1) {
           this.messages.splice(idx, 1);
-          this.renderMessagesTable();
-          this.sound.playPop(420);
+        } else {
+          // 只剩最后一条时清空其内容，方便直接输入
+          this.messages[0].type = 'text';
+          this.messages[0].content = '';
         }
+        this.renderMessagesTable();
+        this.sound.playPop(420);
       });
     });
   }
@@ -1053,12 +1063,26 @@ class KawaiiChatApp {
       id: `msg_${Date.now()}`,
       charId: defaultChar.id,
       type: type,
-      content: type === 'text' ? '今天也要开开心心哦！🌸✨' : '',
-      stickerId: type === 'sticker' ? 'heart_cat' : null,
-      delay: 1100
+      content: '',
+      stickerId: type === 'sticker' ? 'shiba_thumbs' : null,
+      delay: 1200
     };
     this.messages.push(newMsg);
     this.renderMessagesTable();
+
+    // 自动聚焦新添加的输入框并滚动到底部
+    const container = document.getElementById('messagesListContainer');
+    if (container) {
+      container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+    }
+    if (type === 'text') {
+      const inputs = this.messagesTableBody.querySelectorAll('.table-text-input');
+      if (inputs.length > 0) {
+        inputs[inputs.length - 1].focus();
+      }
+    } else if (type === 'sticker') {
+      this.openStickerModal(newMsg.id);
+    }
   }
 
   setMessageSticker(msgId, stickerObj) {
@@ -1068,11 +1092,22 @@ class KawaiiChatApp {
     this.renderMessagesTable();
   }
 
+  // 获取有效可播放的消息列表（过滤未填写文字的空行）
+  getValidMessages() {
+    return this.messages.filter(m => m.type === 'sticker' || (m.content && m.content.trim().length > 0));
+  }
+
   // ==========================================
-  // 8. 核心：从起点到终点的平滑灵动动画播放引擎
+  // 8. 对话动画播放引擎
   // ==========================================
   startPlay(fromBeginning = true) {
-    if (this.messages.length === 0) return;
+    const validMsgs = this.getValidMessages();
+    if (validMsgs.length === 0) {
+      this.playStatusText.textContent = '⚠️ 请先在消息列表中输入至少一条对话内容，或点击「载入使用示例」';
+      const firstInput = this.messagesTableBody.querySelector('.table-text-input');
+      if (firstInput) firstInput.focus();
+      return;
+    }
 
     if (this.countdownTimer) {
       clearInterval(this.countdownTimer);
@@ -1081,12 +1116,13 @@ class KawaiiChatApp {
 
     if (fromBeginning) {
       this.resetPlaybackState();
+      this.playableMessages = validMsgs;
       this.currentPlayIndex = 0;
       this.chatMessagesList.innerHTML = '';
-      this.highlightActiveTableRow(0);
+      this.highlightActiveTableRow(this.playableMessages[0]?.id);
     }
 
-    // 核心体验：自动平滑滚动回手机顶端，对齐画面，方便录屏
+    // 自动平滑滚动回手机画面顶部，方便录屏
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     const countdownSec = this.countdownDurationSelect ? parseInt(this.countdownDurationSelect.value, 10) : 2;
@@ -1105,7 +1141,7 @@ class KawaiiChatApp {
     if (this.countdownOverlay) this.countdownOverlay.style.display = 'flex';
     if (this.countdownNum) this.countdownNum.textContent = remaining;
 
-    this.playStatusText.textContent = `🎬 倒计时 ${remaining} 秒后开聊（画面已自动对齐手机）...`;
+    this.playStatusText.textContent = `🎬 倒计时 ${remaining} 秒后开始播放（画面已自动对齐）...`;
     this.playBtnText.textContent = `⏳ 倒计时 ${remaining}s...`;
     this.btnPlayChat.disabled = true;
     this.sound.playPop(520);
@@ -1114,11 +1150,11 @@ class KawaiiChatApp {
       remaining--;
       if (remaining > 0) {
         if (this.countdownNum) this.countdownNum.textContent = remaining;
-        this.playStatusText.textContent = `🎬 倒计时 ${remaining} 秒后开聊...`;
+        this.playStatusText.textContent = `🎬 倒计时 ${remaining} 秒后开始播放...`;
         this.playBtnText.textContent = `⏳ 倒计时 ${remaining}s...`;
         this.sound.playPop(520);
       } else if (remaining === 0) {
-        if (this.countdownNum) this.countdownNum.textContent = 'GO! ✨';
+        if (this.countdownNum) this.countdownNum.textContent = '开始';
         this.sound.playStickerChime();
         setTimeout(() => {
           clearInterval(this.countdownTimer);
@@ -1126,7 +1162,7 @@ class KawaiiChatApp {
           if (this.countdownOverlay) this.countdownOverlay.style.display = 'none';
           this.btnPlayChat.disabled = false;
           if (onFinish) onFinish();
-        }, 380);
+        }, 350);
       }
     }, 1000);
   }
@@ -1137,7 +1173,7 @@ class KawaiiChatApp {
     this.updatePlayUiState();
 
     this.statusPulseDot.classList.add('playing');
-    this.playStatusText.textContent = '萌萌聊天记录正在灵动播放中... 💬✨';
+    this.playStatusText.textContent = '正在按顺序自动播放对话...';
 
     this.scheduleNextMessage();
   }
@@ -1145,17 +1181,16 @@ class KawaiiChatApp {
   scheduleNextMessage() {
     if (!this.isPlaying || this.isPaused) return;
 
-    if (this.currentPlayIndex >= this.messages.length) {
+    if (this.currentPlayIndex >= this.playableMessages.length) {
       this.finishPlayback();
       return;
     }
 
-    const msg = this.messages[this.currentPlayIndex];
+    const msg = this.playableMessages[this.currentPlayIndex];
     const char = this.characters.find(c => c.id === msg.charId) || this.characters[0];
 
-    // 如果是左侧角色，先模拟显示短暂的“对方正在输入...”气泡
     const showTyping = char.side === 'left';
-    const typingDuration = showTyping ? 450 : 50;
+    const typingDuration = showTyping ? 420 : 50;
 
     if (showTyping) {
       this.showTypingIndicator(char);
@@ -1165,11 +1200,9 @@ class KawaiiChatApp {
       if (!this.isPlaying || this.isPaused) return;
       this.hideTypingIndicator();
 
-      // 真正弹出消息气泡
       this.renderBubbleToScreen(msg, char);
-      this.highlightActiveTableRow(this.currentPlayIndex);
+      this.highlightActiveTableRow(msg.id);
 
-      // 播放音效
       if (msg.type === 'sticker') {
         this.sound.playStickerChime();
       } else {
@@ -1178,7 +1211,6 @@ class KawaiiChatApp {
 
       this.currentPlayIndex++;
 
-      // 计算本条消息展示后的停顿时间
       const delay = Math.max(300, (msg.delay || 1200) / this.speedMultiplier);
 
       this.playbackTimer = setTimeout(() => {
@@ -1205,27 +1237,24 @@ class KawaiiChatApp {
     if (this.typingBubbleWrap) this.typingBubbleWrap.style.display = 'none';
   }
 
-  // 向手机屏幕内插入一条带弹跳动画的消息
   renderBubbleToScreen(msg, char) {
     const row = document.createElement('div');
     row.className = `chat-msg-row ${char.side}`;
     row.dataset.msgId = msg.id;
 
-    // 头像
     let avatarInner = '';
     if (char.avatar.type === 'custom' && char.avatar.src) {
-      avatarInner = `<img src="${char.avatar.src}" class="msg-avatar-img" alt="${char.name}">`;
+      avatarInner = `<img src="${char.avatar.src}" class="msg-avatar-img" alt="${this.escapeHtml(char.name)}">`;
     } else {
       const preset = PRESET_AVATARS.find(a => a.id === char.avatar.id) || PRESET_AVATARS[0];
       avatarInner = preset.svg;
     }
 
-    // 气泡内容
     let bubbleContentHtml = '';
     if (msg.type === 'sticker') {
       if (msg.stickerObj) {
         if (msg.stickerObj.type === 'custom') {
-          bubbleContentHtml = `<img src="${msg.stickerObj.src}" class="msg-sticker-img" alt="表情">`;
+          bubbleContentHtml = `<img src="${msg.stickerObj.src}" class="msg-sticker-img" alt="图片">`;
         } else {
           const presetSticker = PRESET_STICKERS.find(s => s.id === msg.stickerObj.id) || PRESET_STICKERS[0];
           bubbleContentHtml = `<div class="msg-sticker-svg-wrap">${presetSticker.svg}</div>`;
@@ -1243,7 +1272,7 @@ class KawaiiChatApp {
         ${avatarInner}
       </div>
       <div class="msg-content-col">
-        <span class="msg-sender-name">${char.name}</span>
+        <span class="msg-sender-name">${this.escapeHtml(char.name)}</span>
         <div class="msg-bubble ${msg.type === 'sticker' ? 'is-sticker' : `bubble-theme-${char.theme}`}">
           ${bubbleContentHtml}
         </div>
@@ -1251,8 +1280,6 @@ class KawaiiChatApp {
     `;
 
     this.chatMessagesList.appendChild(row);
-
-    // 关键体验：在手机屏幕内部向下平滑滚动，绝不移动整个网页窗口！
     this.scrollToChatBottom();
   }
 
@@ -1280,7 +1307,7 @@ class KawaiiChatApp {
       const avatarWrap = row.querySelector('.msg-avatar-wrap');
       if (avatarWrap) {
         if (char.avatar.type === 'custom' && char.avatar.src) {
-          avatarWrap.innerHTML = `<img src="${char.avatar.src}" class="msg-avatar-img" alt="${char.name}">`;
+          avatarWrap.innerHTML = `<img src="${char.avatar.src}" class="msg-avatar-img" alt="${this.escapeHtml(char.name)}">`;
         } else {
           const preset = PRESET_AVATARS.find(a => a.id === char.avatar.id) || PRESET_AVATARS[0];
           avatarWrap.innerHTML = preset.svg;
@@ -1294,29 +1321,32 @@ class KawaiiChatApp {
     });
   }
 
-  // 高亮表格当前消息行（仅在表格自身容器内轻量微调，绝不调用 window 级 scrollIntoView）
-  highlightActiveTableRow(idx) {
-    document.querySelectorAll('.cute-table tr').forEach(r => r.classList.remove('active-playback-row'));
-    if (idx < this.messages.length) {
-      const msg = this.messages[idx];
-      const tr = document.getElementById(`msgTableRow_${msg.id}`);
-      if (tr) {
-        tr.classList.add('active-playback-row');
-        const container = document.querySelector('.messages-table-container');
-        if (container) {
-          const trTop = tr.offsetTop - container.offsetTop;
-          container.scrollTo({ top: trTop - 40, behavior: 'smooth' });
-        }
+  highlightActiveTableRow(msgId) {
+    document.querySelectorAll('.msg-editor-card').forEach(r => r.classList.remove('active-playback-row'));
+    if (!msgId) return;
+    const card = document.getElementById(`msgTableRow_${msgId}`);
+    if (card) {
+      card.classList.add('active-playback-row');
+      const container = document.getElementById('messagesListContainer');
+      if (container) {
+        const cardTop = card.offsetTop - container.offsetTop;
+        container.scrollTo({ top: Math.max(0, cardTop - 24), behavior: 'smooth' });
       }
     }
   }
 
   stepForward() {
-    if (this.currentPlayIndex < this.messages.length) {
-      const msg = this.messages[this.currentPlayIndex];
+    const validMsgs = this.getValidMessages();
+    if (validMsgs.length === 0) {
+      this.playStatusText.textContent = '⚠️ 请先在下方列表输入对话内容';
+      return;
+    }
+    this.playableMessages = validMsgs;
+    if (this.currentPlayIndex < this.playableMessages.length) {
+      const msg = this.playableMessages[this.currentPlayIndex];
       const char = this.characters.find(c => c.id === msg.charId) || this.characters[0];
       this.renderBubbleToScreen(msg, char);
-      this.highlightActiveTableRow(this.currentPlayIndex);
+      this.highlightActiveTableRow(msg.id);
 
       if (msg.type === 'sticker') this.sound.playStickerChime();
       else this.sound.playBubblePop(660);
@@ -1331,10 +1361,10 @@ class KawaiiChatApp {
     this.updatePlayUiState();
     if (this.isPaused) {
       if (this.playbackTimer) clearTimeout(this.playbackTimer);
-      this.playStatusText.textContent = '聊天播放已暂停，点击「继续」或「下一条」';
+      this.playStatusText.textContent = '播放已暂停，点击「继续」或「下一条」';
       this.statusPulseDot.classList.remove('playing');
     } else {
-      this.playStatusText.textContent = '萌萌聊天记录正在灵动播放中... 💬✨';
+      this.playStatusText.textContent = '正在按顺序自动播放对话...';
       this.statusPulseDot.classList.add('playing');
       this.scheduleNextMessage();
     }
@@ -1345,7 +1375,7 @@ class KawaiiChatApp {
     this.isPlaying = true;
     this.updatePlayUiState();
     this.statusPulseDot.classList.add('playing');
-    this.playStatusText.textContent = '萌萌聊天记录正在灵动播放中... 💬✨';
+    this.playStatusText.textContent = '正在按顺序自动播放对话...';
     this.scheduleNextMessage();
   }
 
@@ -1354,7 +1384,7 @@ class KawaiiChatApp {
     this.isPaused = false;
     this.updatePlayUiState();
     this.statusPulseDot.classList.remove('playing');
-    this.playStatusText.textContent = '🎉 聊天动画播放完毕！可随时重新播放或修改剧本';
+    this.playStatusText.textContent = '✅ 对话播放完毕，可重新播放或继续编辑内容';
     this.sound.playStickerChime();
   }
 
@@ -1376,9 +1406,9 @@ class KawaiiChatApp {
     this.resetPlaybackState();
     this.currentPlayIndex = 0;
     this.chatMessagesList.innerHTML = '';
-    this.highlightActiveTableRow(0);
+    this.highlightActiveTableRow(null);
     this.statusPulseDot.classList.remove('playing');
-    this.playStatusText.textContent = '已清空手机聊天屏幕，点击「开始播放聊天动画」';
+    this.playStatusText.textContent = '已重置手机画面，点击「开始播放对话」即可预览';
   }
 
   updatePlayUiState() {
@@ -1394,14 +1424,14 @@ class KawaiiChatApp {
       this.btnPauseChat.textContent = '▶️ 继续';
     } else {
       this.playBtnIcon.textContent = '▶';
-      this.playBtnText.textContent = '开始播放聊天动画';
+      this.playBtnText.textContent = '开始播放对话';
       this.btnPauseChat.disabled = true;
       this.btnPauseChat.textContent = '⏸️ 暂停';
     }
   }
 
   // ==========================================
-  // 9. 模态弹窗系统：角色头像选择 & 表情包选择
+  // 9. 模态弹窗系统：角色头像选择 & 表情/图片选择
   // ==========================================
   renderAvatarModal() {
     this.presetAvatarGrid.innerHTML = '';
@@ -1481,7 +1511,6 @@ class KawaiiChatApp {
   }
 }
 
-// 页面加载完成后启动
 document.addEventListener('DOMContentLoaded', () => {
-  window.chatApp = new KawaiiChatApp();
+  window.chatApp = new ChatSimulatorApp();
 });
