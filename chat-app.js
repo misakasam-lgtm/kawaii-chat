@@ -1280,7 +1280,44 @@ class ChatSimulatorApp {
     `;
 
     this.chatMessagesList.appendChild(row);
+    this.spawnBubbleStars(row, char.side);
     this.scrollToChatBottom();
+  }
+
+  spawnBubbleStars(row, side) {
+    const bubble = row.querySelector('.msg-bubble');
+    if (!bubble) return;
+
+    const stars = ['✦', '★', '✨', '✦', '★'];
+    const colors = ['#fbbf24', '#f472b6', '#38bdf8', '#a78bfa', '#fb7185'];
+    const count = 6;
+
+    for (let i = 0; i < count; i++) {
+      const star = document.createElement('span');
+      star.className = 'bubble-star-particle';
+      star.textContent = stars[i % stars.length];
+      star.style.color = colors[i % colors.length];
+      star.style.fontSize = `${10 + Math.random() * 6}px`;
+
+      // 定位在气泡附近
+      if (side === 'right') {
+        star.style.right = `${10 + Math.random() * 48}px`;
+      } else {
+        star.style.left = `${42 + Math.random() * 48}px`;
+      }
+      star.style.top = `${6 + Math.random() * 18}px`;
+
+      const angle = (Math.PI * 2 / count) * i + (Math.random() - 0.5) * 0.5;
+      const dist = 16 + Math.random() * 20;
+      const sx = Math.cos(angle) * dist;
+      const sy = Math.sin(angle) * dist - 8;
+
+      star.style.setProperty('--sx', `${sx.toFixed(1)}px`);
+      star.style.setProperty('--sy', `${sy.toFixed(1)}px`);
+
+      row.appendChild(star);
+      setTimeout(() => star.remove(), 750);
+    }
   }
 
   scrollToChatBottom() {

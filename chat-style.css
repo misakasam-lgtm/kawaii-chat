@@ -4,10 +4,10 @@
 
 :root {
   --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 45%, #eef2ff 100%);
-  --phone-case-color: #1e293b;
-  --phone-case-border: #334155;
+  --phone-case-color: #ffffff;
+  --phone-case-border: #cbd5e1;
   --phone-screen-bg: #f5f7fa;
-  --phone-shadow: 0 22px 50px -12px rgba(15, 23, 42, 0.35), 0 10px 20px -8px rgba(15, 23, 42, 0.2);
+  --phone-shadow: 0 22px 50px -12px rgba(15, 23, 42, 0.25), 0 10px 20px -8px rgba(15, 23, 42, 0.12);
 
   --primary-accent: #3b82f6;
   --primary-accent-dark: #2563eb;
@@ -240,7 +240,9 @@ body.focus-mode .exit-focus-btn {
   background: var(--phone-case-color);
   border-radius: 38px;
   padding: 10px;
-  box-shadow: var(--phone-shadow);
+  box-shadow: var(--phone-shadow),
+              inset 0 2px 4px rgba(255, 255, 255, 0.9),
+              inset 0 -2px 5px rgba(148, 163, 184, 0.25);
   border: 3px solid var(--phone-case-border);
   flex-shrink: 0;
 }
@@ -257,7 +259,7 @@ body.focus-mode .exit-focus-btn {
 
 .phone-btn {
   position: absolute;
-  background: #475569;
+  background: #cbd5e1;
   border-radius: 2px;
 }
 .btn-vol-up { left: -5px; top: 96px; width: 3px; height: 32px; }
@@ -456,17 +458,25 @@ body.focus-mode .exit-focus-btn {
 
 /* 消息行基础结构 */
 .chat-msg-row {
+  position: relative;
   display: flex;
   align-items: flex-start;
   gap: 7px;
-  animation: messagePopIn 0.35s ease-out forwards;
+  animation: messagePopIn 0.55s var(--bounce-spring) forwards;
   transform-origin: bottom center;
 }
 
 @keyframes messagePopIn {
   0% {
-    transform: scale(0.85) translateY(12px);
+    transform: scale(0.3) translateY(28px);
     opacity: 0;
+  }
+  65% {
+    transform: scale(1.08) translateY(-4px);
+    opacity: 1;
+  }
+  85% {
+    transform: scale(0.96) translateY(2px);
   }
   100% {
     transform: scale(1) translateY(0);
@@ -496,6 +506,12 @@ body.focus-mode .exit-focus-btn {
   display: flex;
   align-items: center;
   justify-content: center;
+  animation: avatarJump 0.5s var(--bounce-spring);
+}
+
+@keyframes avatarJump {
+  0%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-7px) scale(1.1); }
 }
 
 .msg-avatar-img {
@@ -576,6 +592,13 @@ body.focus-mode .exit-focus-btn {
   object-fit: contain;
   display: block;
   border-radius: 8px;
+  animation: stickerBounce 0.7s var(--bounce-spring);
+}
+
+@keyframes stickerBounce {
+  0% { transform: scale(0.2) rotate(-15deg); }
+  60% { transform: scale(1.18) rotate(6deg); }
+  100% { transform: scale(1) rotate(0deg); }
 }
 
 .msg-sticker-svg-wrap {
@@ -584,6 +607,31 @@ body.focus-mode .exit-focus-btn {
   display: flex;
   align-items: center;
   justify-content: center;
+  animation: stickerBounce 0.7s var(--bounce-spring);
+}
+
+/* 气泡弹出星星粒子特效 */
+.bubble-star-particle {
+  position: absolute;
+  pointer-events: none;
+  z-index: 20;
+  font-weight: 700;
+  line-height: 1;
+  animation: starBurstPop 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes starBurstPop {
+  0% {
+    transform: translate(0, 0) scale(0.3) rotate(0deg);
+    opacity: 1;
+  }
+  55% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--sx, 18px), var(--sy, -18px)) scale(1.15) rotate(45deg);
+    opacity: 0;
+  }
 }
 
 .msg-sticker-svg-wrap svg {
